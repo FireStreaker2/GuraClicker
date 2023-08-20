@@ -11,6 +11,11 @@ height = dimensions.current_h
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("GuraClicker")
 
+# colors
+white = (255, 255, 255)
+black = (0, 0, 0)
+gray = (120, 120, 120)
+
 # images
 icon = pygame.image.load("assets/images/icon.png")
 pygame.display.set_icon(icon)
@@ -18,18 +23,23 @@ pygame.display.set_icon(icon)
 iconRect = icon.get_rect()
 iconRect.center = (width / 2, height / 2)
 
+chumbud = pygame.image.load("assets/images/chumbud.png")
+chumbudRect = chumbud.get_rect()
+chumbud = pygame.transform.scale(chumbud, (100, 100))
+
 # sounds
 clickSound = pygame.mixer.Sound("assets/sounds/click.wav")
 
 # random shapes
-buyTextContainer = pygame.Rect(((width / 5, height / 5), (300, 100)))
+buyTextContainer = pygame.Rect(((width / 5, height / 5), (500, 100)))
 buyTextContainer.center = (width / 5, height / 5)
 
 # text
 font = pygame.font.Font(None, 36)
+mediumFont = pygame.font.Font(None, 27)
 smallFont = pygame.font.Font(None, 18)
 
-buyText = font.render("Buy Chumbud - 10 (+1/s)", True, (120, 120, 120))
+buyText = font.render("Buy Chumbud - 10 (+1/s)", True, gray)
 
 # other game variables
 count = 0
@@ -49,6 +59,7 @@ pygame.time.set_timer(INCREMENT_EVENT, 1000)
 
 # main loop
 while running:
+    # event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -68,30 +79,43 @@ while running:
             if buyTextContainer.collidepoint(position) and count >= 10:
                 chumbuds += 1
                 count -= 10
-                resize(buyTextContainer, 200, 50, (width / 5, height / 5))
-                buyText = smallFont.render("Buy Chumbud - 10 (+1/s)", True, (120, 120, 120))
+                resize(buyTextContainer, 250, 50, (width / 5, height / 5))
+                buyText = smallFont.render("Buy Chumbud - 10 (+1/s)", True, gray)
+                chumbud = pygame.transform.scale(chumbud, (50, 50))
 
         elif event.type == pygame.MOUSEBUTTONUP:
             icon = pygame.transform.scale(icon, (500, 500))
+            chumbud = pygame.transform.scale(chumbud, (100, 100))
             iconRect = icon.get_rect()
             iconRect.center = (width / 2, height / 2)
-            resize(buyTextContainer, 300, 100, (width / 5, height / 5))
-            buyText = font.render("Buy Chumbud - 10 (+1/s)", True, (120, 120, 120))
+            resize(buyTextContainer, 500, 100, (width / 5, height / 5))
+            buyText = font.render("Buy Chumbud - 10 (+1/s)", True, gray)
 
-    screen.fill((0, 0, 0))
+    screen.fill(black)
 
+    # icon
     screen.blit(icon, iconRect)
 
-    text = font.render(f"Click Count: {count}", True, (255, 255, 255))
+    # click text
+    text = font.render(f"Click Count: {count}", True, white)
     textRect = text.get_rect()
     textRect.center = (width / 2, height / 5)
     screen.blit(text, textRect)
 
-    pygame.draw.rect(screen, (255, 255, 255), buyTextContainer)
+    # chumbuds
+    pygame.draw.rect(screen, white, buyTextContainer)
 
     buyTextRect = buyText.get_rect()
-    buyTextRect.center = buyTextContainer.center
+    buyTextRect.center = (buyTextContainer.center[0] + 50, buyTextContainer.center[1])
     screen.blit(buyText, buyTextRect)
+
+    chumbudRect.center = (buyTextContainer.x + 150, buyTextContainer.y + 110)
+    screen.blit(chumbud, chumbudRect)
+
+    buyTextInfo = mediumFont.render(f"Chumbud Count: {chumbuds} ({chumbuds}/s)", True, gray)
+    buyTextInfoRect = buyTextInfo.get_rect()
+    buyTextInfoRect.center = (textRect.center[0], textRect.center[1] + 30)
+    screen.blit(buyTextInfo, buyTextInfoRect)
 
     
     pygame.display.flip()
