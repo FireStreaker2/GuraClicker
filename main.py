@@ -90,7 +90,7 @@ while running:
                 buyText = smallFont.render("Buy Chumbud - 10 (+1/s)", True, gray)
                 chumbud = pygame.transform.scale(chumbud, (50, 50))
 
-            if rebuildContainer.collidepoint(position):# and count >= 1000000:
+            if rebuildContainer.collidepoint(position) and count >= 1000000:
                 resize(rebuildContainer, 200, 200, (width / 5 * 4, height / 4))
                 rebuildText = smallFont.render("Rebuild Atlantis! - 1,000,000", True, gray)
                 atlantis = pygame.transform.scale(atlantis, (100, 100))
