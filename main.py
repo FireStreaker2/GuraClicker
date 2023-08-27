@@ -27,6 +27,10 @@ chumbud = pygame.image.load("assets/images/chumbud.png")
 chumbudRect = chumbud.get_rect()
 chumbud = pygame.transform.scale(chumbud, (100, 100))
 
+atlantis = pygame.image.load("assets/images/atlantis.png")
+atlantisRect = atlantis.get_rect()
+atlantis = pygame.transform.scale(atlantis, (200, 200))
+
 # sounds
 clickSound = pygame.mixer.Sound("assets/sounds/click.wav")
 
@@ -34,12 +38,15 @@ clickSound = pygame.mixer.Sound("assets/sounds/click.wav")
 buyTextContainer = pygame.Rect(((width / 5, height / 5), (500, 100)))
 buyTextContainer.center = (width / 5, height / 5)
 
+rebuildContainer = pygame.Rect(((1592, 200), (400, 300)))
+
 # text
 font = pygame.font.Font(None, 36)
 mediumFont = pygame.font.Font(None, 27)
 smallFont = pygame.font.Font(None, 18)
 
 buyText = font.render("Buy Chumbud - 10 (+1/s)", True, gray)
+rebuildText = font.render("Rebuild Atlantis! - 1,000,000", True, gray)
 
 # other game variables
 count = 0
@@ -83,6 +90,15 @@ while running:
                 buyText = smallFont.render("Buy Chumbud - 10 (+1/s)", True, gray)
                 chumbud = pygame.transform.scale(chumbud, (50, 50))
 
+            if rebuildContainer.collidepoint(position):# and count >= 1000000:
+                resize(rebuildContainer, 200, 200, (width / 5 * 4, height / 4))
+                rebuildText = smallFont.render("Rebuild Atlantis! - 1,000,000", True, gray)
+                atlantis = pygame.transform.scale(atlantis, (100, 100))
+                atlantisRect = atlantis.get_rect()
+                atlantisRect.center = (rebuildContainer.center[0] + 10, rebuildContainer.center[1] - 20)
+
+                running = False
+
         elif event.type == pygame.MOUSEBUTTONUP:
             icon = pygame.transform.scale(icon, (500, 500))
             chumbud = pygame.transform.scale(chumbud, (100, 100))
@@ -90,6 +106,11 @@ while running:
             iconRect.center = (width / 2, height / 2)
             resize(buyTextContainer, 500, 100, (width / 5, height / 5))
             buyText = font.render("Buy Chumbud - 10 (+1/s)", True, gray)
+            resize(rebuildContainer, 400, 300, (width / 5 * 4, height / 4))
+            rebuildText = font.render("Rebuild Atlantis! - 1,000,000", True, gray)
+            atlantis = pygame.transform.scale(atlantis, (200, 200))
+            atlantisRect = atlantis.get_rect()
+            atlantisRect.center = (rebuildContainer.center[0] + 10, rebuildContainer.center[1] - 20)
 
     screen.fill(black)
 
@@ -112,10 +133,19 @@ while running:
     chumbudRect.center = (buyTextContainer.x + 150, buyTextContainer.y + 110)
     screen.blit(chumbud, chumbudRect)
 
-    buyTextInfo = mediumFont.render(f"Chumbud Count: {chumbuds} ({chumbuds}/s)", True, gray)
+    buyTextInfo = mediumFont.render(f"Chumbud Count: {chumbuds} (+{chumbuds}/s)", True, gray)
     buyTextInfoRect = buyTextInfo.get_rect()
     buyTextInfoRect.center = (textRect.center[0], textRect.center[1] + 30)
     screen.blit(buyTextInfo, buyTextInfoRect)
+
+    # rebuild atlantis!!!
+    pygame.draw.rect(screen, white, rebuildContainer)
+    atlantisRect.center = (rebuildContainer.center[0] + 10, rebuildContainer.center[1] - 20)
+    screen.blit(atlantis, atlantisRect)
+
+    rebuildTextRect = rebuildText.get_rect()
+    rebuildTextRect.center = (rebuildContainer.center[0] + 10, rebuildContainer.center[1] + 70)
+    screen.blit(rebuildText, rebuildTextRect)
 
     
     pygame.display.flip()
